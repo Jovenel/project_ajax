@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>Ajax post JSON</title>
+</head>
+
+<body class="bg-black">
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="p-5 text-white bg-dark text-center"> List des employés </h1>
+            <hr>
+            <select name="" id="choix" class="mt-3 form-select">
+                <option disabled selected> Make your choice ... </option>
+                <option value="7782">Laura</option>
+                <option value="7566">Stéphanie</option>
+                <option value="7848">Guillaume</option>
+                <option value="7934">Amandine</option>
+                <option value="7369">Julien </option>
+                <option value="7256">Daniel </option>
+
+            </select>
+
+        </div>
+        <div class="col-12 mt-3" id="affichage"></div>
+    </div>
+
+
+</div>
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+<script>
+document.getElementById('choix').addEventListener('change',function(){
+    // le ficheir cible pour l'appel
+    let cible = 'ajax.php';
+    //instanciation de l'objet ajax
+    if(window.XMLHttpRequest){
+        xhttp = new XMLHttpRequest(); // Pour les navigateur récents
+    }else{
+        xhttp= new ActiveXObject("Microsoft.XMLHTTP"); // internet explorer < 9 
+    }
+    //let idEmployes = document.getElementById('choix').value;
+    let idEmployes= this.value
+    console.log(idEmployes);
+    // On prrépare les données à fournir à post
+    let arg = 'id_employes='+ idEmployes;
+    // let arg = 'indice1=valeur1&indice2=valeur2&...'
+    console.log(arg);
+    xhttp.open('post',cible);
+    // Avec la methode post, la ligne suivante est obligatoire et doit être immédiatement après la methode open()
+    xhttp.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+
+    xhttp.onreadystatechange= function(){
+        if(xhttp.status==200 && xhttp.readyState ==4){
+            console.log(xhttp.responseText);
+            // ResponseText contient la réponse, dans notre cas, on obtient du texte au format json Il faut ce texte en véritable objet  JSON
+            let retour = JSON.parse(xhttp.responseText);
+            console.log(retour);
+            document.getElementById('affichage').innerHTML=retour.reponse;
+        }
+    }
+    xhttp.send(arg); // On envoie la requete ajax avec les arguments attendus que l'on retrouve sur le fichier cible dans $_POST
+})
+
+</script>
+
+</body>
+
+</html>
